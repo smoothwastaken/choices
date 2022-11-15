@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { View, SafeAreaView, ScrollView, Dimensions } from "react-native";
-import { CInput, CText, CTitle } from "../components/CustomsComponents";
+import {
+  CButton,
+  CInput,
+  CText,
+  CTitle,
+  CTouchableOpacity,
+} from "../components/CustomsComponents";
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [canSubmit, setCanSubmit] = useState(false);
 
   useEffect(() => {
-    if (username === "" || username <= 3) {
+    if (username === "" || username.length < 3) {
       setCanSubmit(false);
     } else {
       setCanSubmit(true);
@@ -15,10 +21,15 @@ const HomeScreen = () => {
   }, [username]);
 
   return (
-    <ScrollView
-      contentContainerStyle={{ paddingHorizontal: 15, paddingVertical: 45 }}
+    <View
+      style={{
+        flex: 1,
+        paddingHorizontal: 15,
+        paddingVertical: 45,
+        backgroundColor: "#000",
+      }}
     >
-      <CTitle>choice</CTitle>
+      <CTitle>choose.</CTitle>
       <View
         style={{
           flex: 1,
@@ -29,43 +40,34 @@ const HomeScreen = () => {
       >
         <CInput
           title={"username"}
-          placeholder={"XxX_darkS4suke_XxX"}
-          onTextChangeCallback={(text) => setUsername(text)}
+          placeholder={"ilikechoices324"}
+          textContentType={"username"}
+          onTextChangeCallback={(text) => setUsername(text.toLowerCase())}
         ></CInput>
 
+        <View style={{ marginTop: 50 }} />
+
         {/* First Button */}
-        <View
-          style={{
-            marginVertical: 15,
-            padding: 25,
-            backgroundColor: "#707070",
-            borderRadius: 30,
-            width: Dimensions.get("screen").width * 0.7,
-            alignItems: "center",
-            borderWidth: 2,
-            borderColor: "grey",
+        <CButton
+          disabled={!canSubmit}
+          callback={() => {
+            navigation.navigate("RoomCreation", { username });
           }}
         >
-          <CText fontSize={20}>Create</CText>
-        </View>
+          create.
+        </CButton>
 
         {/* Second Button */}
-        <View
-          style={{
-            marginVertical: 15,
-            padding: 25,
-            backgroundColor: "#707070",
-            borderRadius: 30,
-            width: Dimensions.get("screen").width * 0.7,
-            alignItems: "center",
-            borderWidth: 2,
-            borderColor: "grey",
+        <CButton
+          disabled={!canSubmit}
+          callback={() => {
+            navigation.navigate("RoomJoining", { username });
           }}
         >
-          <CText fontSize={20}>Join</CText>
-        </View>
+          join.
+        </CButton>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 

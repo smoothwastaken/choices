@@ -4,14 +4,21 @@ import {
   StyleSheet,
   View,
   ActivityIndicator,
+  Dimensions,
 } from "react-native";
 import {
   useFonts,
   Poppins_600SemiBold,
   Poppins_700Bold,
 } from "@expo-google-fonts/poppins";
-import { CText } from "./components/CustomsComponents";
 import HomeScreen from "./screens/HomeScreen";
+import { NavigationContainer } from "@react-navigation/native";
+
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import RoomCreationScreen from "./screens/rooms/RoomCreationScreen";
+import RoomJoiningScreen from "./screens/rooms/RoomJoiningScreen";
+
+const MainStack = createNativeStackNavigator();
 
 export default function App() {
   let [fontsLoaded] = useFonts({
@@ -25,9 +32,31 @@ export default function App() {
 
   return (
     <>
-      <View style={styles.container}>
-        <HomeScreen />
-      </View>
+      <NavigationContainer>
+        <MainStack.Navigator
+          screenOptions={{ headerShown: false }}
+          initialRouteName="Home"
+        >
+          <MainStack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          {/* Rooms related */}
+          <MainStack.Group screenOptions={{ headerShown: false }}>
+            <MainStack.Screen
+              name="RoomCreation"
+              component={RoomCreationScreen}
+            />
+            <MainStack.Screen
+              name="RoomJoining"
+              component={RoomJoiningScreen}
+            />
+          </MainStack.Group>
+        </MainStack.Navigator>
+      </NavigationContainer>
       <StatusBar style="light" />
     </>
   );

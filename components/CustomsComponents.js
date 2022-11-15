@@ -92,8 +92,10 @@ function CTouchableOpacity({
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       }}
       onLongPress={() => {
-        longCallback ? longCallback() : null;
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+        if (longCallback) {
+          longCallback();
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+        }
       }}
     >
       {children}
@@ -115,19 +117,28 @@ function CButton({
       callback={callback}
       disabled={disabled ? disabled : false}
       style={{
-        backgroundColor: disabled ? "gray" : bgColor ? `#${bgColor}` : "black",
-        borderRadius: 10,
-        width: width ? width : 300,
-        height: height ? height : 50,
+        backgroundColor: disabled
+          ? "#303030"
+          : bgColor
+          ? `#${bgColor}`
+          : "#707070",
+        borderRadius: 30,
+        borderWidth: 2,
+        borderColor: disabled ? "#404040" : "grey",
+        width: width ? width : Dimensions.get("screen").width * 0.7,
+        height: height ? height : null,
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        padding: 5,
+        padding: 20,
         marginHorizontal: 25,
         marginVertical: 15,
       }}
     >
-      <CText color={color ? color : "white"} fontSize={17} bold>
+      <CText
+        color={disabled ? "grey" : color ? color : defaultColorText}
+        fontSize={17}
+      >
         {children}
       </CText>
     </CTouchableOpacity>
@@ -142,8 +153,10 @@ function CInput({
   ref,
   onTextChangeCallback,
   editable = true,
+  keyboardTheme = "dark",
   placeholder,
   width,
+  maxLength = 999999,
 }) {
   const [display, setDisplay] = useState(false);
   return (
@@ -172,29 +185,36 @@ function CInput({
           )}
         </CTouchableOpacity>
       ) : null}
-      <View style={{ marginTop: 5 }}>
-        <CText fontSize={20}>{title}:</CText>
+      <View style={{ marginTop: 5, marginLeft: 15 }}>
+        <CText fontSize={18} color={"#FAFAFA"}>
+          {title}:
+        </CText>
       </View>
       <TextInput
+        // For the parameters, see https://reactnative.dev/docs/textinput#textcontenttype-ios
         ref={ref}
         autoComplete={type}
         textContentType={textContentType}
         secureTextEntry={type === "password" ? (display ? false : true) : false}
         keyboardType={keyboardType ? keyboardType : "default"}
+        keyboardAppearance={keyboardTheme}
         autoCorrect={false}
         onChangeText={(text) =>
           onTextChangeCallback ? onTextChangeCallback(text) : null
         }
+        maxLength={maxLength ? maxLength : false}
         editable={editable ? editable : true}
         placeholder={placeholder}
         placeholderTextColor={"grey"}
         style={{
           zIndex: 1,
-          backgroundColor: editable ? defaultColorText : "grey",
+          backgroundColor: editable ? "#FAFAFA" : "grey",
           color: "black",
           fontSize: 20,
           padding: 15,
-          borderRadius: 50,
+          borderRadius: 15,
+          borderWidth: 2,
+          borderColor: "#D0D0D0",
           marginBottom: 15,
         }}
       />

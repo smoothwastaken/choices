@@ -15,13 +15,14 @@ import {
   CTitle,
   CTouchableOpacity,
 } from "../../components/CustomsComponents";
+import { onCreateRoom } from "../../methods/FirebaseMethod";
 
 const RoomCreationScreen = ({ navigation, route }) => {
   const { username } = route.params;
 
   const [isPassword, setIsPassword] = useState(false);
   const [roomName, setRoomName] = useState("");
-  const [roomPassword, setRoomPassword] = useState();
+  const [roomPassword, setRoomPassword] = useState(0);
 
   const [canSubmit, setCanSubmit] = useState(false);
 
@@ -84,13 +85,17 @@ const RoomCreationScreen = ({ navigation, route }) => {
             title={"room's code"}
             keyboardType={"number-pad"}
             maxLength={5}
-            onTextChangeCallback={(code) => setRoomPassword(code)}
+            onTextChangeCallback={(code) =>
+              isPassword ? setRoomPassword(Number(code)) : setRoomPassword(0)
+            }
           />
         ) : null}
         <CButton
           disabled={!canSubmit}
           callback={() => {
-            Alert.alert("creating a room...");
+            onCreateRoom(username, roomName, roomPassword, (infos) =>
+              console.log(infos)
+            );
           }}
         >
           create it.
